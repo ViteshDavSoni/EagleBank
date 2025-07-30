@@ -25,9 +25,16 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpGet("{id}")]
-    public ActionResult GetUser(String id)
+    public async Task<ActionResult> GetUser(Guid id)
     {
-        return Ok(User.Identity?.Name);
+        return Ok(await _userService.GetUserAsync(id, User.Identity?.Name));
+    }
+    
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult> GetUser()
+    {
+        return Ok(await _userService.GetCurrentUserAsync(User.Identity?.Name));
     }
 
     [HttpPost]

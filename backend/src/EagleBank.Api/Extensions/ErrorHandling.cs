@@ -26,6 +26,9 @@ public static class ErrorHandling
                     case UnauthorizedException:
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         break;
+                    case ForbiddenException:
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        break;
                     default:
                         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                         break;
