@@ -1,5 +1,6 @@
 using EagleBank.Application.Dtos;
 using EagleBank.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EagleBank.Api.Controllers;
@@ -14,14 +15,25 @@ public class UsersController : ControllerBase
     {
         _userService = userService;
     }
-    
-    [HttpGet("{id:guid}")]
-    public ActionResult GetUser(Guid id) => Ok();
+
+    [HttpPost("/login")]
+    public ActionResult AuthorizeUser(LoginUserRequest request)
+    {
+        var token = _userService.AuthorizeUser(request);
+        return Ok(new { token });
+    }
+
+    [Authorize]
+    [HttpGet("{id}")]
+    public ActionResult GetUser(String id)
+    {
+        return Ok(User.Identity?.Name);
+    }
 
     [HttpPost]
     public async Task<ActionResult> CreateUser(CreateUserRequest request)
     {
-        return Ok(await _userService.CreateUser(request));
+        return Ok(await _userService.CreateUserAsync(request));
     }
     
     [HttpPatch("{id:guid}")]
