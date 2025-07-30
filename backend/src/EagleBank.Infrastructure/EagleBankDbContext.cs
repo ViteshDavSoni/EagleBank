@@ -7,6 +7,7 @@ namespace EagleBank.Infrastructure;
 public class EagleBankDbContext: DbContext, IDbContext
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
     public EagleBankDbContext(DbContextOptions<EagleBankDbContext> options) : base(options)
     {

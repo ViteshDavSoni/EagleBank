@@ -8,6 +8,8 @@ public class User
     public string Email { get; private set; }
     
     public string HashedPassword { get; private set; }
+    
+    public ICollection<Account> BankAccounts { get; set; }
 
     public User(Guid id, string firstName, string lastName, string email, string hashedPassword)
     {

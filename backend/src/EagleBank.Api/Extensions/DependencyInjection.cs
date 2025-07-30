@@ -11,8 +11,11 @@ public static class DependencyInjection
     public static void AddDependencies(this WebApplicationBuilder builder)
     {
         var connectionString = builder.Configuration.GetConnectionString("MySqlServer");
-        builder.Services.AddScoped<IUserService, UserService>()
+        builder.Services
+            .AddScoped<IUserService, UserService>()
             .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IAccountService, AccountService>()
+            .AddScoped<IAccountRepository, AccountRepository>()
             .AddDbContext<IDbContext, EagleBankDbContext>((options) =>
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }

@@ -1,3 +1,6 @@
+using EagleBank.Application.Dtos;
+using EagleBank.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EagleBank.Api.Controllers;
@@ -6,20 +9,22 @@ namespace EagleBank.Api.Controllers;
 [Route("v1/[controller]")]
 public class AccountsController : ControllerBase
 {
+    private readonly IAccountService _accountService;
+
+    public AccountsController(IAccountService accountService)
+    {
+        _accountService = accountService;
+    }
+    
+    [Authorize]
     [HttpGet]
+    public async Task<IActionResult> GetAccounts() => Ok(await _accountService.GetAccountsAsync(User.Identity?.Name));
     
-    public ActionResult GetAccounts() => Ok();
-    
+    [Authorize]
     [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetAccount(Guid id) => Ok(await _accountService.GetAccountAsync(id, User.Identity?.Name));
     
-    public ActionResult GetAccount(Guid id) => Ok();
-    
+    [Authorize]
     [HttpPost]
-    public ActionResult CreateAccount() => Ok();
-    
-    [HttpPatch("{id:guid}")]
-    public ActionResult UpdateAccount(Guid id) => Ok();
-    
-    [HttpDelete("{id:guid}")]
-    public ActionResult DeleteAccount(Guid id) => NoContent();
+    public async Task<IActionResult> CreateAccount(CreateAccountRequest request) => Ok(await _accountService.AddAccountAsync(request, User.Identity?.Name));
 }
