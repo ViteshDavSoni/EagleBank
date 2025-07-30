@@ -10,3 +10,7 @@
 /.idea
 /backend/.idea
 .DS_Store
+/backend/src/EagleBank.Infrastructure/bin
+/backend/src/EagleBank.Application/bin
+/backend/src/EagleBank.Domain/bin
+.DS_Store
