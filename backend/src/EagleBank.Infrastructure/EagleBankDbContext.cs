@@ -15,6 +15,7 @@ public class EagleBankDbContext: DbContext, IDbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration())
+                    .ApplyConfiguration(new AccountConfiguration());
     }
 }
