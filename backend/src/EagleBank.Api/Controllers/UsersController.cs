@@ -16,10 +16,10 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost("/login")]
-    public ActionResult AuthorizeUser(LoginUserRequest request)
+    [HttpPost("login")]
+    public async Task<ActionResult> AuthorizeUser(LoginUserRequest request)
     {
-        var token = _userService.AuthorizeUser(request);
+        var token = await _userService.AuthorizeUserAsync(request);
         return Ok(new { token });
     }
 

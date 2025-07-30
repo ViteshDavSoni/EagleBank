@@ -36,6 +36,10 @@ namespace EagleBank.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("longtext");

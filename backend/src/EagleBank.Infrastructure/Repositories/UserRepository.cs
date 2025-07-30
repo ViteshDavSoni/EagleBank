@@ -1,5 +1,6 @@
 using EagleBank.Domain.Entities;
 using EagleBank.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace EagleBank.Infrastructure.Repositories;
 
@@ -17,5 +18,10 @@ public class UserRepository : IUserRepository
         user = _dbContext.Users.Add(user).Entity;
         await _dbContext.SaveChangesAsync();
         return user;
+    }
+
+    public async Task<User?> GetUserAsync(string email)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 }

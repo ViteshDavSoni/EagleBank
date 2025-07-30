@@ -1,10 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Security.Authentication;
 using EagleBank.Application.Dtos;
 using EagleBank.Domain.Entities;
+using EagleBank.Domain.Exceptions;
 using EagleBank.Domain.Repositories;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EagleBank.Application.Services;
 
@@ -17,30 +15,25 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public string AuthorizeUser(LoginUserRequest request)
+    public async Task<string> AuthorizeUserAsync(LoginUserRequest request)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hM3b8nIUQFPBV9FMasFwAD3X89nvzuOs"));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
+        var user = await _userRepository.GetUserAsync(request.Email);
+        
+        if (user == null)
         {
-            new Claim(ClaimTypes.Name, request.Email),
-        };
-
-        var token = new JwtSecurityToken(
-            issuer: "EagleBank",
-            audience: "EagleBank",
-            claims: claims,
-            expires: DateTime.Now.AddHours(1),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            throw new NotFoundException("User not found.");
+        }
+        
+        if (user.HashedPassword.Equals(AuthExtensions.HashPassword(request.Password)))
+        {
+            return AuthExtensions.GetToken(request.Email);
+        }
+        throw new UnauthorizedException("Unable to authenticate user.");
     }
-    
+
     public async Task<UserDto> CreateUserAsync(CreateUserRequest request)
     {
-        var user = User.CreateUser(request.FirstName, request.LastName, request.Email);
+        var user = User.CreateUser(request.FirstName, request.LastName, request.Email, AuthExtensions.HashPassword(request.Password));
         user = await _userRepository.AddUserAsync(user);
         return UserDto.FromEntity(user);
     }

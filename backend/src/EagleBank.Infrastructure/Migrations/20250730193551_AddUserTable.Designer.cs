@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EagleBank.Infrastructure.Migrations
 {
     [DbContext(typeof(EagleBankDbContext))]
-    [Migration("20250730154946_SeedInitial")]
-    partial class SeedInitial
+    [Migration("20250730193551_AddUserTable")]
+    partial class AddUserTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,10 @@ namespace EagleBank.Infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("HashedPassword")
                         .IsRequired()
                         .HasColumnType("longtext");
 
