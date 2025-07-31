@@ -5,9 +5,9 @@ namespace EagleBank.Application.Services;
 
 public interface IAccountService
 {
-    Task<AccountDto> GetAccountAsync(Guid id, string? currentUserEmail);
+    Task<AccountDto> GetAccountAsync(Guid id);
     
-    Task<IEnumerable<AccountDto>> GetAccountsAsync(string? currentUserEmail);
+    Task<IEnumerable<AccountDto>> GetAccountsAsync();
     
-    Task<AccountDto> AddAccountAsync(CreateAccountRequest request, string? currentUserEmail);
+    Task<AccountDto> AddAccountAsync(CreateAccountRequest request);
 }

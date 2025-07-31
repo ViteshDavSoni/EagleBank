@@ -18,13 +18,13 @@ public class AccountsController : ControllerBase
     
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetAccounts() => Ok(await _accountService.GetAccountsAsync(User.Identity?.Name));
+    public async Task<IActionResult> GetAccounts() => Ok(await _accountService.GetAccountsAsync());
     
     [Authorize]
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetAccount(Guid id) => Ok(await _accountService.GetAccountAsync(id, User.Identity?.Name));
+    public async Task<IActionResult> GetAccount(Guid id) => Ok(await _accountService.GetAccountAsync(id));
     
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateAccount(CreateAccountRequest request) => Ok(await _accountService.AddAccountAsync(request, User.Identity?.Name));
+    public async Task<IActionResult> CreateAccount(CreateAccountRequest request) => Ok(await _accountService.AddAccountAsync(request));
 }

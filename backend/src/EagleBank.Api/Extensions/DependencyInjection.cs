@@ -16,6 +16,8 @@ public static class DependencyInjection
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IAccountService, AccountService>()
             .AddScoped<IAccountRepository, AccountRepository>()
+            .AddHttpContextAccessor()
+            .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddDbContext<IDbContext, EagleBankDbContext>((options) =>
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }

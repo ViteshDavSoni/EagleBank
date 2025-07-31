@@ -2,54 +2,25 @@ using EagleBank.Application.Dtos;
 using EagleBank.Domain.Entities;
 using EagleBank.Domain.Exceptions;
 using EagleBank.Domain.Repositories;
+using Microsoft.AspNetCore.Http;
 
 namespace EagleBank.Application.Services;
 
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly ICurrentUserService _currentUserService;
     
-    public AccountService(IAccountRepository accountRepository,  IUserRepository userRepository)
+    public AccountService(IAccountRepository accountRepository, ICurrentUserService currentUserService)
     {
         _accountRepository = accountRepository;
-        _userRepository = userRepository;
+        _currentUserService = currentUserService;
     }
     
-    public async Task<AccountDto> GetAccountAsync(Guid id, string? currentUserEmail)
+    public async Task<AccountDto> GetAccountAsync(Guid id)
     {
-        return await GetAccountWithAuthAsync(id, currentUserEmail);
-    }
-
-    public async Task<IEnumerable<AccountDto>> GetAccountsAsync(string? currentUserEmail)
-    {
-        var accounts = await _accountRepository.GetAccountsAsync(currentUserEmail);
-        return accounts.Select(AccountDto.FromEntity);
-    }
-
-    public async Task<AccountDto> AddAccountAsync(CreateAccountRequest request, string? currentUserEmail)
-    {
-        var user = await _userRepository.GetUserByEmailAsync(currentUserEmail);
-        if (user == null)
-        {
-            throw new ForbiddenException();
-        }
-
-        var account = Account.CreateAccount(request.AccountName, user.Id);
-        account = await _accountRepository.AddAccountAsync(account);
-        return AccountDto.FromEntity(account);
-
-    }
-
-    private async Task<AccountDto> GetAccountWithAuthAsync(Guid id, string? currentUserEmail)
-    {
-        if (currentUserEmail == null)
-        {
-            throw new ForbiddenException();
-        }
-        
+        var user = await _currentUserService.GetCurrentUser();
         var account = await _accountRepository.GetAccountAsync(id);
-        var user = await _userRepository.GetUserByEmailAsync(currentUserEmail);
         
         if (account == null)
         {
@@ -62,5 +33,21 @@ public class AccountService : IAccountService
         }
         
         return AccountDto.FromEntity(account);
+    }
+
+    public async Task<IEnumerable<AccountDto>> GetAccountsAsync()
+    {
+        var user = await _currentUserService.GetCurrentUser();
+        var accounts = await _accountRepository.GetAccountsAsync(user.Email);
+        return accounts.Select(AccountDto.FromEntity);
+    }
+
+    public async Task<AccountDto> AddAccountAsync(CreateAccountRequest request)
+    {
+        var user = await _currentUserService.GetCurrentUser();
+        var account = Account.CreateAccount(request.AccountName, user.Id);
+        account = await _accountRepository.AddAccountAsync(account);
+        return AccountDto.FromEntity(account);
+
     }
 }

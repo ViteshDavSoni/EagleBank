@@ -27,14 +27,14 @@ public class UsersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUser(Guid id)
     {
-        return Ok(await _userService.GetUserAsync(id, User.Identity?.Name));
+        return Ok(await _userService.GetUserAsync(id));
     }
     
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetUser()
     {
-        return Ok(await _userService.GetCurrentUserAsync(User.Identity?.Name));
+        return Ok(await _userService.GetCurrentUserAsync());
     }
 
     [HttpPost]

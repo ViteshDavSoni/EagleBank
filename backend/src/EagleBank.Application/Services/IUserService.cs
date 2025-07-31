@@ -6,6 +6,6 @@ public interface IUserService
 {
     Task<UserDto> CreateUserAsync(CreateUserRequest request);
     Task<string> AuthorizeUserAsync(LoginUserRequest request);
-    Task<UserDto> GetUserAsync(Guid id, string? currentUserEmail);
-    Task<UserDto> GetCurrentUserAsync(string? currentUserEmail);
+    Task<UserDto> GetUserAsync(Guid id);
+    Task<UserDto> GetCurrentUserAsync();
 }

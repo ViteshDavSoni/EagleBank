@@ -8,10 +8,12 @@ namespace EagleBank.Application.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-
-    public UserService(IUserRepository userRepository)
+    private readonly ICurrentUserService _currentUserService;
+    
+    public UserService(IUserRepository userRepository,  ICurrentUserService currentUserService)
     {
         _userRepository = userRepository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<string> AuthorizeUserAsync(LoginUserRequest request)
@@ -37,41 +39,23 @@ public class UserService : IUserService
         return UserDto.FromEntity(user);
     }
     
-    public async Task<UserDto> GetUserAsync(Guid id, string? currentUserEmail)
-    {
-        return await GetUserWithAuthAsync(id,  currentUserEmail);
-    }
-    
-    public async Task<UserDto> GetCurrentUserAsync(string? currentUserEmail)
-    {
-        if (currentUserEmail == null)
-        {
-            throw new UnauthorizedException();
-        }
-        
-        var user = await _userRepository.GetUserByEmailAsync(currentUserEmail);
-        if (user == null)
-        {
-            throw new NotFoundException();
-        }
-        
-        return await GetUserWithAuthAsync(user.Id,  currentUserEmail);
-    }
-
-    private async Task<UserDto> GetUserWithAuthAsync(Guid id, string? currentUserEmail)
+    public async Task<UserDto> GetUserAsync(Guid id)
     {
         var user = await _userRepository.GetUserAsync(id);
-
         if (user == null)
         {
             throw new NotFoundException();
         }
-        
-        if (currentUserEmail == null || user.Email != currentUserEmail)
+        if (_currentUserService.UserEmail == null || user.Email != _currentUserService.UserEmail)
         {
             throw new ForbiddenException();
         }
-        
+        return UserDto.FromEntity(user);
+    }
+    
+    public async Task<UserDto> GetCurrentUserAsync()
+    {
+        var user = await _currentUserService.GetCurrentUser();
         return UserDto.FromEntity(user);
     }
 }
