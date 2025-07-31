@@ -1,8 +1,8 @@
 using EagleBank.Application.Dtos;
+using EagleBank.Application.Dtos.Requests;
 using EagleBank.Domain.Entities;
 using EagleBank.Domain.Exceptions;
 using EagleBank.Domain.Repositories;
-using Microsoft.AspNetCore.Http;
 
 namespace EagleBank.Application.Services;
 
@@ -10,11 +10,13 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ITransactionRepository _transactionRepository;
     
-    public AccountService(IAccountRepository accountRepository, ICurrentUserService currentUserService)
+    public AccountService(IAccountRepository accountRepository, ICurrentUserService currentUserService,  ITransactionRepository transactionRepository)
     {
         _accountRepository = accountRepository;
         _currentUserService = currentUserService;
+        _transactionRepository = transactionRepository;
     }
     
     public async Task<AccountDto> GetAccountAsync(Guid id)
@@ -48,6 +50,20 @@ public class AccountService : IAccountService
         var account = Account.CreateAccount(request.AccountName, user.Id);
         account = await _accountRepository.AddAccountAsync(account);
         return AccountDto.FromEntity(account);
+    }
 
+    public async Task<AccountDto> AddTransactionAsync(Guid id, CreateTransactionRequest request)
+    {
+        var account = await _accountRepository.GetAccountAsync(id);
+        if (account == null)
+        {
+            throw new NotFoundException();
+        }
+        var transaction = Transaction.CreateTransaction(id, request.TransactionName, request.TransactionType, request.Amount);
+        account.AddTransaction(transaction);
+        account = await _accountRepository.UpdateAccountAsync(account);
+        await _accountRepository.UpdateAccountAsync(account);
+        await _transactionRepository.AddTransactionAsync(transaction);
+        return await GetAccountAsync(id);
     }
 }

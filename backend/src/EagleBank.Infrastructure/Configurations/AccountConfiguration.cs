@@ -13,5 +13,6 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.HasOne(b => b.User)
             .WithMany(u => u.BankAccounts)
             .HasForeignKey(b => b.UserId);
+        builder.Navigation(b => b.Transactions).AutoInclude(true);
     }
 }

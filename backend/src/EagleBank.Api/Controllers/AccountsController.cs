@@ -1,4 +1,4 @@
-using EagleBank.Application.Dtos;
+using EagleBank.Application.Dtos.Requests;
 using EagleBank.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,4 +27,10 @@ public class AccountsController : ControllerBase
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateAccount(CreateAccountRequest request) => Ok(await _accountService.AddAccountAsync(request));
+
+    [Authorize]
+    [HttpPost("{id:guid}/transactions")]
+    public async Task<IActionResult> CreateTransaction(Guid id, CreateTransactionRequest request) => Ok(await _accountService.AddTransactionAsync(id, request));
+
+
 }

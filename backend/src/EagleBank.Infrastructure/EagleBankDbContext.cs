@@ -8,6 +8,8 @@ public class EagleBankDbContext: DbContext, IDbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Account> Accounts { get; set; }
+    
+    public DbSet<Transaction> Transactions { get; set; }
 
     public EagleBankDbContext(DbContextOptions<EagleBankDbContext> options) : base(options)
     {
@@ -15,7 +17,8 @@ public class EagleBankDbContext: DbContext, IDbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserConfiguration())
-                    .ApplyConfiguration(new AccountConfiguration());
+        modelBuilder.ApplyConfiguration(new TransactionConfiguration())
+                    .ApplyConfiguration(new AccountConfiguration())
+                    .ApplyConfiguration(new UserConfiguration());
     }
 }

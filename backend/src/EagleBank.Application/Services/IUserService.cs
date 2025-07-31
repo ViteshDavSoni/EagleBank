@@ -1,4 +1,5 @@
 using EagleBank.Application.Dtos;
+using EagleBank.Application.Dtos.Requests;
 
 namespace EagleBank.Application.Services;
 

@@ -1,4 +1,5 @@
 using EagleBank.Domain.Entities;
+using EagleBank.Domain.Enums;
 
 namespace EagleBank.Application.Dtos;
 
@@ -18,5 +19,12 @@ public class AccountDto
             UserId = account.UserId,
             Balance = account.Balance,
         };
+    }
+    
+    private static decimal GetBalance(IReadOnlyCollection<Transaction> transactions)
+    {
+        var deposits = transactions.Where(t => t.Type == TransactionType.Deposit).Sum(t => t.Amount);
+        var withdrawals = transactions.Where(t => t.Type == TransactionType.Withdraw).Sum(t => -t.Amount);
+        return deposits + withdrawals;
     }
 }

@@ -45,6 +45,32 @@ namespace EagleBank.Infrastructure.Migrations
                     b.ToTable("Account", (string)null);
                 });
 
+            modelBuilder.Entity("EagleBank.Domain.Entities.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Transaction", (string)null);
+                });
+
             modelBuilder.Entity("EagleBank.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -83,6 +109,22 @@ namespace EagleBank.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EagleBank.Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("EagleBank.Domain.Entities.Account", "Account")
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("EagleBank.Domain.Entities.Account", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("EagleBank.Domain.Entities.User", b =>

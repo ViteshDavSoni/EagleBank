@@ -11,5 +11,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable(nameof(User));
         builder.HasKey(x => x.Id);
         builder.HasAlternateKey(x => x.Email);
+        builder.Navigation(e => e.BankAccounts).AutoInclude();
     }
 }

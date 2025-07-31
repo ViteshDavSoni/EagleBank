@@ -6,10 +6,8 @@ public class User
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
-    
     public string HashedPassword { get; private set; }
-    
-    public ICollection<Account> BankAccounts { get; set; }
+    public IEnumerable<Account> BankAccounts { get; private set; }
 
     public User(Guid id, string firstName, string lastName, string email, string hashedPassword)
     {

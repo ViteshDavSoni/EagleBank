@@ -1,4 +1,5 @@
 using EagleBank.Application.Services;
+using EagleBank.Domain.Entities;
 using EagleBank.Domain.Repositories;
 using EagleBank.Infrastructure;
 using EagleBank.Infrastructure.Repositories;
@@ -16,6 +17,7 @@ public static class DependencyInjection
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IAccountService, AccountService>()
             .AddScoped<IAccountRepository, AccountRepository>()
+            .AddScoped<ITransactionRepository, TransactionRepository>()
             .AddHttpContextAccessor()
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddDbContext<IDbContext, EagleBankDbContext>((options) =>

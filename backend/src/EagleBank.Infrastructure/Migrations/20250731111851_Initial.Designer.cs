@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EagleBank.Infrastructure.Migrations
 {
     [DbContext(typeof(EagleBankDbContext))]
-    [Migration("20250731075536_Initial")]
+    [Migration("20250731111851_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -46,6 +46,32 @@ namespace EagleBank.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Account", (string)null);
+                });
+
+            modelBuilder.Entity("EagleBank.Domain.Entities.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Transaction", (string)null);
                 });
 
             modelBuilder.Entity("EagleBank.Domain.Entities.User", b =>
@@ -86,6 +112,22 @@ namespace EagleBank.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EagleBank.Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("EagleBank.Domain.Entities.Account", "Account")
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("EagleBank.Domain.Entities.Account", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("EagleBank.Domain.Entities.User", b =>

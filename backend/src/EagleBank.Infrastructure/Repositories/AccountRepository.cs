@@ -29,4 +29,11 @@ public class AccountRepository : IAccountRepository
     {
         return await _dbContext.Accounts.Where(a => a.User.Email == userEmail).ToListAsync();
     }
+
+    public async Task<Account> UpdateAccountAsync(Account account)
+    {
+        account = _dbContext.Accounts.Update(account).Entity;
+        await _dbContext.SaveChangesAsync();
+        return account;
+    }
 }

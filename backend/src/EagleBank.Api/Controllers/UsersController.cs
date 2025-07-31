@@ -1,4 +1,4 @@
-using EagleBank.Application.Dtos;
+using EagleBank.Application.Dtos.Requests;
 using EagleBank.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

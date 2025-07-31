@@ -1,4 +1,5 @@
 using EagleBank.Application.Dtos;
+using EagleBank.Application.Dtos.Requests;
 using EagleBank.Domain.Entities;
 using EagleBank.Domain.Exceptions;
 using EagleBank.Domain.Repositories;
