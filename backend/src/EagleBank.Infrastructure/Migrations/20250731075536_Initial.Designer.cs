@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EagleBank.Infrastructure.Migrations
 {
     [DbContext(typeof(EagleBankDbContext))]
-    [Migration("20250730234602_Initial")]
+    [Migration("20250731075536_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace EagleBank.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Account", (string)null);
                 });
 
             modelBuilder.Entity("EagleBank.Domain.Entities.User", b =>

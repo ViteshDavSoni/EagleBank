@@ -42,7 +42,7 @@ namespace EagleBank.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Account", (string)null);
                 });
 
             modelBuilder.Entity("EagleBank.Domain.Entities.User", b =>
