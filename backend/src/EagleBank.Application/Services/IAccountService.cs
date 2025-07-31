@@ -9,4 +9,6 @@ public interface IAccountService
     Task<IEnumerable<AccountDto>> GetAccountsAsync();
     Task<AccountDto> AddAccountAsync(CreateAccountRequest request);
     Task<AccountDto> AddTransactionAsync(Guid id, CreateTransactionRequest request);
+    Task<IEnumerable<TransactionDto>> GetTransactionsAsync(Guid id);
+
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EagleBank.Infrastructure.Migrations
 {
     [DbContext(typeof(EagleBankDbContext))]
-    [Migration("20250731111851_Initial")]
+    [Migration("20250731115954_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -59,6 +59,9 @@ namespace EagleBank.Infrastructure.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()

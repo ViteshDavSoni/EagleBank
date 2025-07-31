@@ -1,4 +1,5 @@
 using EagleBank.Domain.Enums;
+using EagleBank.Domain.Exceptions;
 
 namespace EagleBank.Domain.Entities;
 
@@ -9,10 +10,8 @@ public class Account
     public Guid UserId { get; private set; }
     public decimal Balance { get; private set; }
     public User User { get; private set; }
-    public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
+    public IReadOnlyCollection<Transaction> Transactions;
     
-    private List<Transaction> _transactions = new();
-
     public Account(Guid id, string accountName, Guid userId, decimal balance)
     {
         Id = id;
@@ -39,6 +38,12 @@ public class Account
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        if (Balance < 0)
+        {
+            throw new UnprocessableEntityException();  
+        }
+        
         return this;
     }
 }

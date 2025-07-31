@@ -21,19 +21,7 @@ public class AccountService : IAccountService
     
     public async Task<AccountDto> GetAccountAsync(Guid id)
     {
-        var user = await _currentUserService.GetCurrentUser();
-        var account = await _accountRepository.GetAccountAsync(id);
-        
-        if (account == null)
-        {
-            throw new NotFoundException();
-        }
-
-        if (user == null || account.UserId != user.Id)
-        {
-            throw new ForbiddenException();
-        }
-        
+        var account = await GetAccountInternalAsync(id);
         return AccountDto.FromEntity(account);
     }
 
@@ -54,16 +42,37 @@ public class AccountService : IAccountService
 
     public async Task<AccountDto> AddTransactionAsync(Guid id, CreateTransactionRequest request)
     {
-        var account = await _accountRepository.GetAccountAsync(id);
-        if (account == null)
-        {
-            throw new NotFoundException();
-        }
+        var account = await GetAccountInternalAsync(id);
         var transaction = Transaction.CreateTransaction(id, request.TransactionName, request.TransactionType, request.Amount);
         account.AddTransaction(transaction);
         account = await _accountRepository.UpdateAccountAsync(account);
         await _accountRepository.UpdateAccountAsync(account);
         await _transactionRepository.AddTransactionAsync(transaction);
         return await GetAccountAsync(id);
+    }
+
+    public async Task<IEnumerable<TransactionDto>> GetTransactionsAsync(Guid id)
+    {
+        var account = await GetAccountInternalAsync(id);
+        return account.Transactions
+            .Select(TransactionDto.FromEntity)
+            .OrderByDescending(t => t.DateTime);
+    }
+
+    private async Task<Account> GetAccountInternalAsync(Guid id)
+    {
+        var user = await _currentUserService.GetCurrentUser();
+        var account = await _accountRepository.GetAccountAsync(id);
+        if (account == null)
+        {
+            throw new NotFoundException();
+        }
+
+        if (account.UserId != user.Id)
+        {
+            throw new ForbiddenException();
+        }
+        
+        return account;
     }
 }

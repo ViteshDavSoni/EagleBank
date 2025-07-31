@@ -29,6 +29,9 @@ public static class ErrorHandling
                     case ForbiddenException:
                         context.Response.StatusCode = StatusCodes.Status403Forbidden;
                         break;
+                    case UnprocessableEntityException: 
+                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                        break;
                     default:
                         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                         break;

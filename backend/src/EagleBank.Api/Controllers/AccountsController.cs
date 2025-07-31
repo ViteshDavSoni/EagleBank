@@ -32,5 +32,7 @@ public class AccountsController : ControllerBase
     [HttpPost("{id:guid}/transactions")]
     public async Task<IActionResult> CreateTransaction(Guid id, CreateTransactionRequest request) => Ok(await _accountService.AddTransactionAsync(id, request));
 
-
+    [Authorize]
+    [HttpGet("{id:guid}/transactions")]
+    public async Task<IActionResult> GetTransactions(Guid id) => Ok(await _accountService.GetTransactionsAsync(id));
 }

@@ -10,7 +10,7 @@ public static class Authorization
     {
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Eagle Bank API", Version = "v1" });
         
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
